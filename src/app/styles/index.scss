@@ -1,0 +1,11 @@
+@import "reset";
+
+.app {
+  min-height: 100vh;
+}
+
+.content-page {
+  display: flex;
+}
+
+::-webkit-scrollbar { display: none; }
