@@ -4,12 +4,14 @@ import cls from './Select.module.scss'
 import {classNames, Mods} from "@/shared/lib/classNames/classNames";
 
 export interface SelectOption<T extends string> {
-  value: T
-  content: string
+  value: string;
 }
+
 interface SelectProps<T extends string> {
   className?: string
   label?: string
+  required?: boolean
+  multiple?: boolean
   options?: Array<SelectOption<T>>
   value?: T
   onChange?: (value: T) => void
@@ -23,7 +25,8 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
     options,
     value,
     onChange,
-    readonly
+    readonly,
+    required
   } = props
 
   const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -36,7 +39,7 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
       className={cls.option}
       key={opt.value}
     >
-      {opt.content}
+      {opt.value}
     </option>
   )), [options])
 
