@@ -15,7 +15,6 @@ const MainPage = () => {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
       setFiles(Array.from(e.target.files));
-      console.log(e.target.files[0])
     }
     const reader = new FileReader();
 
@@ -34,7 +33,6 @@ const MainPage = () => {
       reader.readAsText(e.target.files[0]);
     }
 
-    console.log(jsonData)
   }
 
 
@@ -98,6 +96,7 @@ const MainPage = () => {
                   type="reset"
                   className={cls.resetBtn}
                   theme={ButtonTheme.OUTLINE}
+                  onClick={() => console.log(JSON.stringify(jsonData))}
                 >
                   Reset
                 </Button>
