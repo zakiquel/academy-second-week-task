@@ -2,7 +2,7 @@
   --font-family: "Montserrat", sans-serif;
 
   // Small size font
-  --font-size-s: 10px;
+  --font-size-s: 15px;
   --font-line-s: 20px;
   --font-s: var(--font-size-s) / var(--font-line-s) var(--font-family);
 
@@ -26,7 +26,7 @@
   --overlay-z-index: 100;
 
   // Цвета
-  --image-overlay: rgba(50, 50, 66, 0.1);
+  --grey: #8D8D8D;
   --border: #edf2f7;
   --light: #CDCDCD;
   --white: #F9F9F9;
