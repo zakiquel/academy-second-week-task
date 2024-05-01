@@ -1,0 +1,30 @@
+.Wrapper {
+  display: flex;
+  margin-top: 10px;
+}
+
+.label {
+  margin-right: 5px;
+}
+
+.select {
+  background: none;
+  outline: none;
+  color: var(--black);
+  padding: 2px 10px;
+  border: 1px solid var(--border);
+
+  &:focus {
+    outline: 2px solid var(--black-purple);
+    border-radius: 5px;
+  }
+}
+
+.option {
+  color: var(--black-purple);
+  background: var(--white);
+}
+
+.readonly {
+  opacity: 0.8;
+}

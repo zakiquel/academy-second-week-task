@@ -1,0 +1,22 @@
+.input {
+  background: var(--input-bg);
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  width: 100%;
+  padding: 25px;
+  letter-spacing: 0.07em;
+
+  &:focus {
+    outline: 2px solid var(--purple);
+  }
+}
+
+.placeholder {
+  margin-right: 5px;
+}
+
+.readonly {
+  opacity: 0.8;
+}
+

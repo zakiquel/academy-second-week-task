@@ -1,0 +1,36 @@
+:root {
+  --font-family: "Montserrat", sans-serif;
+
+  // Small size font
+  --font-size-s: 10px;
+  --font-line-s: 20px;
+  --font-s: var(--font-size-s) / var(--font-line-s) var(--font-family);
+
+  // Medium size font
+  --font-size-m: 18px;
+  --font-line-m: 24px;
+  --font-m: var(--font-size-m) / var(--font-line-m) var(--font-family);
+
+  // Large size font
+  --font-size-l: 45px;
+  --font-line-l: 32px;
+  --font-l: var(--font-size-l) / var(--font-line-l) var(--font-family);
+
+  // XLarge size font
+  --font-size-xl: 75px;
+  --font-line-xl: 40px;
+  --font-xl: var(--font-size-xl) / var(--font-line-xl) var(--font-family);
+
+  // z - Индексы
+  --modal-z-index: 1000;
+  --overlay-z-index: 100;
+
+  // Цвета
+  --image-overlay: rgba(50, 50, 66, 0.1);
+  --border: #edf2f7;
+  --light: #CDCDCD;
+  --white: #F9F9F9;
+  --purple: #6E41E2;
+  --box-shadow: #eaeaea;
+  --box-shadow-hover: #e1e1e1;
+}

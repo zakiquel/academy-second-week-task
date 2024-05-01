@@ -1,4 +1,9 @@
 @import "reset";
+@import "variables/global";
+
+body {
+  font: var(--font-m);
+}
 
 .app {
   min-height: 100vh;
