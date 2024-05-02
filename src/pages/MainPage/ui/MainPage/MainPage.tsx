@@ -5,6 +5,7 @@ import {ButtonTypes, Data, FieldTypes, InputField, SelectField} from "../../mode
 import {Input} from "@/shared/ui/Input";
 import {Button, ButtonTheme} from "@/shared/ui/Button";
 import {Select} from "@/shared/ui/Select";
+import {Checkbox} from "@/shared/ui/Checkbox";
 
 const MainPage = () => {
   const [files, setFiles] = useState<File[]>([]);
@@ -73,6 +74,14 @@ const MainPage = () => {
                         pattern={pField.pattern}
                       />
                     );
+                  case FieldTypes.CHECKBOX:
+                    return (
+                      <Checkbox
+                        label={field.label}
+                        required={field.required}
+                        id={field.id}
+                      />
+                    )
                 }
               })}
               <div className={cls.btns}>
