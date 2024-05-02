@@ -54,9 +54,9 @@ export const Input = memo((props: InputProps) => {
         <input
           type={type}
           value={value}
-          className={classNames(cls.input, mods)}
+          className={classNames(cls.input, inputMods)}
           readOnly={readonly}
-          onBlur={handleBlur}
+          onChange={handleBlur}
           {...otherProps}
           placeholder={placeholder}
         />

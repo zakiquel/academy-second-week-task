@@ -19,6 +19,10 @@
   &:required:valid {
     border: 2px solid var(--successful-bg);
     outline: none;
+
+    .err {
+      background-color: var(--white);
+    }
   }
 }
 
