@@ -9,6 +9,7 @@
 
 .select {
   display: flex;
+  position: relative;
 }
 
 .input {
@@ -43,6 +44,12 @@
   &:hover {
     background-color: var(--greyS);
   }
+}
+
+.arrow {
+  position: absolute;
+  top: 35%;
+  right: 5%;
 }
 
 .readonly {

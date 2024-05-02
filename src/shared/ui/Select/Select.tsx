@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react';
 
-import cls from './Select.module.scss'
 import { classNames, Mods } from "@/shared/lib/classNames/classNames";
+import Arrow from "@/shared/assets/icons/arrow.svg";
+import cls from './Select.module.scss';
 
 
 interface SelectProps<T extends string> {
@@ -23,11 +24,11 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
     value,
     onChange,
     readonly,
-    required
-  } = props
+  } = props;
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [inputValue, setInputValue] = useState(value || ''); // Используем локальное состояние для значения поля ввода
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -39,6 +40,7 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
   }, [options, searchTerm]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
     setSearchTerm(e.target.value);
   };
 
@@ -47,6 +49,7 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
       onChange(optionValue);
     }
     toggleDropdown();
+    setInputValue(optionValue);
   };
 
   const optionList = filteredOptions.map((opt) => (
@@ -61,7 +64,7 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
 
   const mods: Mods = {
     [cls.readonly]: readonly,
-    [cls.open]: isOpen // Добавление класса, если выпадающий список открыт
+    [cls.open]: isOpen
   };
 
   return (
@@ -70,13 +73,13 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
         <input
           id={label}
           type="text"
-          value={value}
+          value={inputValue}
           placeholder={label}
           onChange={handleInputChange}
           className={cls.input}
         />
         <span className={cls.arrow}>
-          &#9660;
+          <Arrow />
         </span>
       </div>
       {isOpen &&
@@ -85,5 +88,5 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
         </div>
       }
     </div>
-  )
-}
+  );
+};
