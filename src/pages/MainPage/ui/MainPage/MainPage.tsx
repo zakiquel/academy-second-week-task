@@ -1,7 +1,7 @@
 import React, {memo, useState} from 'react';
 import cls from './MainPage.module.scss'
 import {JsonUpload} from "../JsonUpload/JsonUpload";
-import {Data, FieldTypes, InputField, SelectField} from "../../model/types/data";
+import {ButtonTypes, Data, FieldTypes, InputField, SelectField} from "../../model/types/data";
 import {Input} from "@/shared/ui/Input";
 import {Button, ButtonTheme} from "@/shared/ui/Button";
 import {Select} from "@/shared/ui/Select";
@@ -11,6 +11,7 @@ const MainPage = () => {
   const [jsonData, setJsonData] = useState<Data>();
   const [drag, setDrag] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [inputErrors, setInputErrors] = useState<boolean>(false);
 
   return (
     <main className={cls.MainPage}>
@@ -29,26 +30,29 @@ const MainPage = () => {
             <form className={cls.form}>
               <h2>{jsonData.form_name}</h2>
               <p className={cls.description}>{jsonData.form_description}</p>
-              {jsonData.form_fields.map((field, index) => {
+              {jsonData.form_fields.map((field) => {
                 switch (field.type) {
                   case FieldTypes.TEXT:
                     const tField = field as InputField;
                     return (
                       <Input
-                        key={index}
+                        id={tField.id}
+                        key={field.id}
                         type="text"
                         required={tField.required}
                         placeholder={tField.placeholder}
                         maxLength={tField.maxlength}
                         minLength={tField.minlength}
                         pattern={tField.pattern}
+                        mask={tField.mask}
+                        setInputErrors={setInputErrors}
                       />
                     );
                   case FieldTypes.SELECT:
                     const sField = field as SelectField;
                     return (
                       <Select
-                        key={index}
+                        key={field.id}
                         label={sField.label}
                         required={sField.required}
                         multiple={sField.multiple}
@@ -59,7 +63,8 @@ const MainPage = () => {
                     const pField = field as InputField;
                     return (
                       <Input
-                        key={index}
+                        id={pField.id}
+                        key={pField.id}
                         type="password"
                         required={pField.required}
                         placeholder={pField.placeholder}
@@ -74,6 +79,7 @@ const MainPage = () => {
                 {jsonData.form_buttons.map((btn) => (
                   <Button
                     key={btn.name}
+                    disabled={btn.type === ButtonTypes.SUBMIT && inputErrors}
                     theme={ButtonTheme.PURPLE}
                     type={btn.type}
                   >

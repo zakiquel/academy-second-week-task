@@ -13,12 +13,21 @@ type HTMLInputProps = Omit<
   'value' | 'readOnly'
 >;
 
+const emailMsg = 'Email должен быть в формате user@example.com';
+const passwordMsg = 'Пароль должен содержать специальные символы и быть длиннее 8';
+const passwordConfirmMsg = 'Пароли должны совпадать';
+const dateMsg = 'Укажите дату в правильном формате';
+
 interface InputProps extends HTMLInputProps {
   className?: string;
   value?: string | number;
   label?: string;
   autofocus?: boolean;
   readonly?: boolean;
+  mask?: string;
+  pattern?: string;
+  setInputErrors?: (value: boolean) => void;
+  id?: string;
 }
 
 export const Input = memo((props: InputProps) => {
@@ -30,6 +39,10 @@ export const Input = memo((props: InputProps) => {
     autofocus,
     readonly,
     label,
+    mask,
+    pattern,
+    id,
+    setInputErrors,
     ...otherProps
   } = props;
 
@@ -37,11 +50,38 @@ export const Input = memo((props: InputProps) => {
   const [dirty, setDirty] = useState<boolean>(false);
 
   const handleChange = (e: FocusEvent<HTMLInputElement>) => {
-    setValidationMessage(e.target.validationMessage)
+    setValidationMessage(e.target.validationMessage);
+    if (!e.target.validationMessage) {
+      setInputErrors?.(false);
+    } else {
+      setInputErrors?.(true);
+    }
   };
 
-  const handleBlur = () => {
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     setDirty(true);
+    let msg;
+    switch (id) {
+      case 'email':
+        msg = emailMsg;
+        break;
+      case 'password':
+        msg = passwordMsg;
+        break;
+      case 'confirm_password':
+        msg = passwordConfirmMsg;
+        break;
+      case 'date':
+        msg = dateMsg;
+        break;
+    }
+    if (pattern) {
+      const isValid = new RegExp(pattern).test(e.target.value);
+      if (!isValid) {
+        setValidationMessage(`${msg}`);
+        setInputErrors?.(true);
+      }
+    }
   };
 
   const mods: Mods = {
