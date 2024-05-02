@@ -13,6 +13,8 @@ interface JsonUploadProps {
   setJsonData: (data: Data) => void;
   setDrag: (value: boolean) => void;
   files: File[];
+  setError: (value: string) => void;
+  error: string;
 }
 
 export const JsonUpload = memo((props: JsonUploadProps) => {
@@ -22,30 +24,73 @@ export const JsonUpload = memo((props: JsonUploadProps) => {
     setDrag,
     setJsonData,
     files,
+    setError,
+    error
   } = props
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
+    setError('');
+
     if (e.target.files && e.target.files[0]) {
-      setFiles(Array.from(e.target.files));
-    }
-    const reader = new FileReader();
+      const file = e.target.files[0];
+      const extension = file.name.split('.').pop()?.toLowerCase();
 
-    reader.onload = (e) => {
-      try {
-        if (e.target) {
-          const data = JSON.parse(e.target.result as string);
-          setJsonData(data);
-        }
-      } catch (error) {
-        console.error('Error parsing JSON file', error);
+      if (extension === 'json') {
+        setFiles(Array.from(e.target.files));
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          try {
+            if (e.target) {
+              const data = JSON.parse(e.target.result as string);
+              setJsonData(data);
+            }
+          } catch (error) {
+            setError('Error parsing JSON file');
+            console.error('Error parsing JSON file', error);
+          }
+        };
+
+        reader.readAsText(e.target.files[0]);
+      } else {
+        setError('Invalid file type. Please select a .json file.');
       }
-    };
-
-    if (e.target.files) {
-      reader.readAsText(e.target.files[0]);
     }
   }
 
+  function handleDrop(e: React.DragEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setDrag(false);
+    setError('');
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      const extension = file.name.split('.').pop()?.toLowerCase();
+
+      if (extension === 'json') {
+        setFiles(Array.from(e.dataTransfer.files));
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          try {
+            if (e.target) {
+              const data = JSON.parse(e.target.result as string);
+              setJsonData(data);
+            }
+          } catch (error) {
+            setError('Error parsing JSON file');
+            console.error('Error parsing JSON file', error);
+          }
+        };
+
+        reader.readAsText(e.dataTransfer.files[0]);
+      } else {
+        setError('Invalid file type. Please select a .json file.');
+      }
+    }
+  }
 
   function handleDrag(e: React.DragEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -57,16 +102,9 @@ export const JsonUpload = memo((props: JsonUploadProps) => {
     setDrag(false);
   }
 
-  function handleDrop(e: React.DragEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setDrag(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setFiles(Array.from(e.dataTransfer.files));
-    }
-  }
-
   function handleReset() {
     setFiles([]);
+    setError('');
   }
 
   return (
@@ -81,6 +119,7 @@ export const JsonUpload = memo((props: JsonUploadProps) => {
       <label className={cls.label}>
         <span className={cls.labelSpan}>Select a file</span>
         <Input
+          accept=".json"
           type="file"
           className={cls.input}
           onChange={handleChange}
@@ -88,7 +127,7 @@ export const JsonUpload = memo((props: JsonUploadProps) => {
         <p>or drag in form</p>
       </label>
       <p className={cls.warning}>
-        .json files up to 10 MB in size are available for download
+        {(error || files[0]) ? <span>{error}</span> : '.json files up to 10 MB in size are available for download'}
       </p>
       <Icon
         Svg={FileIcon}
@@ -103,15 +142,13 @@ export const JsonUpload = memo((props: JsonUploadProps) => {
               </li>)
             }
           </ul>
-          <div className={cls.btns}>
-            <Button
-              type="reset"
-              className={cls.resetBtn}
-              theme={ButtonTheme.OUTLINE}
-            >
-              Reset
-            </Button>
-          </div>
+          <Button
+            type="reset"
+            className={cls.resetBtn}
+            theme={ButtonTheme.CLEAR}
+          >
+            <span>Delete file</span>
+          </Button>
         </>
       }
     </form>

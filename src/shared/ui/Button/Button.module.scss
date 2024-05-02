@@ -42,9 +42,15 @@
   border: 1px solid var(--purple);
   padding: 18px 27px;
   border-radius: 15px;
+  transition: color 0.3s ease;
 
   &:focus {
     border-radius: 15px;
+  }
+
+  &:hover {
+    color: var(--purple);
+    background: var(--white);
   }
 }
 
