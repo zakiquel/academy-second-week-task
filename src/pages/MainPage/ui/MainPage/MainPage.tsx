@@ -73,6 +73,7 @@ const MainPage = () => {
               <div className={cls.btns}>
                 {jsonData.form_buttons.map((btn) => (
                   <Button
+                    key={btn.name}
                     theme={ButtonTheme.PURPLE}
                     type={btn.type}
                   >

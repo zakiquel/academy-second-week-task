@@ -34,9 +34,14 @@ export const Input = memo((props: InputProps) => {
   } = props;
 
   const [validationMessage, setValidationMessage] = useState<string>('');
+  const [dirty, setDirty] = useState<boolean>(false);
 
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
-    setValidationMessage(e.target.validationMessage);
+  const handleChange = (e: FocusEvent<HTMLInputElement>) => {
+    setValidationMessage(e.target.validationMessage)
+  };
+
+  const handleBlur = () => {
+    setDirty(true);
   };
 
   const mods: Mods = {
@@ -44,7 +49,7 @@ export const Input = memo((props: InputProps) => {
   };
 
   const inputMods: Mods = {
-    [cls.err]: (validationMessage)
+    [cls.err]: (validationMessage && dirty)
   }
 
   return (
@@ -56,11 +61,12 @@ export const Input = memo((props: InputProps) => {
           value={value}
           className={classNames(cls.input, inputMods)}
           readOnly={readonly}
-          onChange={handleBlur}
+          onBlur={handleBlur}
+          onChange={handleChange}
           {...otherProps}
           placeholder={placeholder}
         />
-        {validationMessage && <span className={cls.error}>{validationMessage}</span>}
+        {validationMessage && dirty && <span className={cls.error}>{validationMessage}</span>}
       </label>
     </div>
   );
