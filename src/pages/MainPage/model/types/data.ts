@@ -1,5 +1,3 @@
-import {SelectOption} from "@/shared/ui/Select";
-
 export enum ButtonTypes {
   SUBMIT = 'submit',
   BUTTON = 'button'
@@ -41,7 +39,7 @@ export interface ColorField extends FormFieldBase {
 
 export interface SelectField extends FormFieldBase {
   multiple: boolean;
-  options: SelectOption<string>[];
+  options: string[];
 }
 
 export interface ImageField extends FormFieldBase {

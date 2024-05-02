@@ -1,21 +1,18 @@
-import { type ChangeEvent, useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 
 import cls from './Select.module.scss'
-import {classNames, Mods} from "@/shared/lib/classNames/classNames";
+import { classNames, Mods } from "@/shared/lib/classNames/classNames";
 
-export interface SelectOption<T extends string> {
-  value: string;
-}
 
 interface SelectProps<T extends string> {
-  className?: string
-  label?: string
-  required?: boolean
-  multiple?: boolean
-  options?: Array<SelectOption<T>>
-  value?: T
-  onChange?: (value: T) => void
-  readonly?: boolean
+  className?: string;
+  label?: string;
+  required?: boolean;
+  multiple?: boolean;
+  options?: string[];
+  value?: T;
+  onChange?: (value: T) => void;
+  readonly?: boolean;
 }
 
 export const Select = <T extends string>(props: SelectProps<T>) => {
@@ -29,39 +26,64 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
     required
   } = props
 
-  const onChangeHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-    onChange?.(e.target.value as T)
-  }
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const optionList = useMemo(() => options?.map((opt) => (
-    <option
-      value={opt.value}
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const filteredOptions = useMemo(() => {
+    if (!options) return [];
+    return options.filter(opt => opt.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, [options, searchTerm]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleOptionClick = (optionValue: T) => {
+    if (onChange) {
+      onChange(optionValue);
+    }
+    toggleDropdown();
+  };
+
+  const optionList = filteredOptions.map((opt) => (
+    <div
+      key={opt}
       className={cls.option}
-      key={opt.value}
+      onClick={() => handleOptionClick(opt as T)}
     >
-      {opt.value}
-    </option>
-  )), [options])
+      {opt}
+    </div>
+  ));
 
   const mods: Mods = {
-    [cls.readonly]: readonly
-  }
+    [cls.readonly]: readonly,
+    [cls.open]: isOpen // Добавление класса, если выпадающий список открыт
+  };
 
   return (
     <div className={classNames(cls.Wrapper, mods, [className])}>
-      {label && (
-        <span className={cls.label}>
-          {`${label}>`}
+      <div className={cls.select} onClick={toggleDropdown}>
+        <input
+          id={label}
+          type="text"
+          value={value}
+          placeholder={label}
+          onChange={handleInputChange}
+          className={cls.input}
+        />
+        <span className={cls.arrow}>
+          &#9660;
         </span>
-      )}
-      <select
-        disabled={readonly}
-        className={cls.select}
-        value={value}
-        onChange={onChangeHandler}
-      >
-        {optionList}
-      </select>
+      </div>
+      {isOpen &&
+        <div className={cls.dropdown}>
+          {optionList}
+        </div>
+      }
     </div>
   )
 }

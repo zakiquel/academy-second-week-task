@@ -52,7 +52,7 @@ const MainPage = () => {
                     const sField = field as SelectField;
                     return (
                       <Select
-                        key={field.id}
+                        key={sField.id}
                         label={sField.label}
                         required={sField.required}
                         multiple={sField.multiple}
