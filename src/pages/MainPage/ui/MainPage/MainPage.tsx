@@ -1,6 +1,6 @@
 import React, {memo, useState} from 'react';
 import cls from './MainPage.module.scss'
-import {JsonUpload} from "../JsonUpload/JsonUpload";
+import {FileUpload} from "@/pages/MainPage/ui/FileUpload/FileUpload";
 import {ButtonTypes, Data, FieldTypes, InputField, SelectField} from "../../model/types/data";
 import {Input} from "@/shared/ui/Input";
 import {Button, ButtonTheme} from "@/shared/ui/Button";
@@ -8,23 +8,14 @@ import {Select} from "@/shared/ui/Select";
 import {Checkbox} from "@/shared/ui/Checkbox";
 
 const MainPage = () => {
-  const [files, setFiles] = useState<File[]>([]);
   const [jsonData, setJsonData] = useState<Data>();
-  const [drag, setDrag] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
   const [inputErrors, setInputErrors] = useState<boolean>(false);
 
   return (
     <main className={cls.MainPage}>
       <div className={cls.container}>
-        <JsonUpload
-          drag={drag}
-          files={files}
-          setDrag={setDrag}
-          setFiles={setFiles}
+        <FileUpload
           setJsonData={setJsonData}
-          setError={setError}
-          error={error}
         />
         <>
           {jsonData &&
@@ -82,6 +73,12 @@ const MainPage = () => {
                         id={field.id}
                       />
                     )
+                  case FieldTypes.FILE:
+                      return (
+                        <FileUpload
+                          multiply
+                        />
+                      )
                 }
               })}
               <div className={cls.btns}>

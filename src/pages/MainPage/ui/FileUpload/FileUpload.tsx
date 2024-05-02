@@ -1,5 +1,5 @@
-import React, {ChangeEvent, memo} from 'react';
-import cls from './JsonUpload.module.scss';
+import React, {ChangeEvent, memo, useState} from 'react';
+import cls from './FileUpload.module.scss';
 import {classNames} from "@/shared/lib/classNames/classNames";
 import {Input} from "@/shared/ui/Input";
 import {Icon} from "@/shared/ui/Icon";
@@ -7,26 +7,18 @@ import FileIcon from "@/shared/assets/icons/file.svg";
 import {Button, ButtonTheme} from "@/shared/ui/Button";
 import {Data} from "../../model/types/data";
 
-interface JsonUploadProps {
-  drag: boolean;
-  setFiles: (files: File[]) => void;
-  setJsonData: (data: Data) => void;
-  setDrag: (value: boolean) => void;
-  files: File[];
-  setError: (value: string) => void;
-  error: string;
+interface FileUploadProps {
+  setJsonData?: (data: Data) => void;
+  multiply?: boolean;
 }
 
-export const JsonUpload = memo((props: JsonUploadProps) => {
-  const {
-    drag,
-    setFiles,
-    setDrag,
-    setJsonData,
-    files,
-    setError,
-    error
-  } = props
+export const FileUpload = memo((props: FileUploadProps) => {
+  const {setJsonData, multiply} = props;
+
+  const [drag, setDrag] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [files, setFiles] = useState<File[]>([]);
+
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     setError('');
@@ -44,7 +36,7 @@ export const JsonUpload = memo((props: JsonUploadProps) => {
           try {
             if (e.target) {
               const data = JSON.parse(e.target.result as string);
-              setJsonData(data);
+              setJsonData?.(data);
             }
           } catch (error) {
             setError('Error parsing JSON file');
@@ -77,7 +69,7 @@ export const JsonUpload = memo((props: JsonUploadProps) => {
           try {
             if (e.target) {
               const data = JSON.parse(e.target.result as string);
-              setJsonData(data);
+              setJsonData?.(data);
             }
           } catch (error) {
             setError('Error parsing JSON file');
@@ -122,6 +114,7 @@ export const JsonUpload = memo((props: JsonUploadProps) => {
           accept=".json"
           type="file"
           className={cls.input}
+          multiple={multiply}
           onChange={handleChange}
         />
         <p>or drag in form</p>
