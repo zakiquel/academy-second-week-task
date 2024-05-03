@@ -18,6 +18,8 @@ interface FileUploadProps {
   max?: boolean;
   jsonOnly?: boolean;
   limit: number;
+  id?: string;
+  onFileChange?: (value: File[]) => void;
 }
 
 export const FileUpload = memo((props: FileUploadProps) => {
@@ -26,7 +28,9 @@ export const FileUpload = memo((props: FileUploadProps) => {
     multiply,
     max,
     jsonOnly,
-    limit
+    limit,
+    onFileChange,
+    id
   } = props;
 
   const [drag, setDrag] = useState<boolean>(false);
@@ -43,6 +47,7 @@ export const FileUpload = memo((props: FileUploadProps) => {
 
       if (extension === 'json') {
         setFiles([e.target.files[0]]);
+        onFileChange?.([e.target.files[0]]);
 
         const reader = new FileReader();
 
@@ -63,10 +68,11 @@ export const FileUpload = memo((props: FileUploadProps) => {
       }
     } else if (e.target.files && e.target.files.length < limit) {
       setFiles(Array.from(e.target.files));
+      onFileChange?.([e.target.files[0]]);
     } else setError('The number of files exceeds the limit.')
   }
 
-  function handleDrop(e: React.DragEvent<HTMLFormElement>) {
+  function handleDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     setDrag(false);
     setError('');
@@ -77,6 +83,7 @@ export const FileUpload = memo((props: FileUploadProps) => {
 
       if (extension === 'json') {
         setFiles([e.dataTransfer.files[0]]);
+        onFileChange?.([e.dataTransfer.files[0]]);
 
         const reader = new FileReader();
 
@@ -88,7 +95,6 @@ export const FileUpload = memo((props: FileUploadProps) => {
             }
           } catch (error) {
             setError('Error parsing JSON file');
-            console.error('Error parsing JSON file', error);
           }
         };
 
@@ -98,15 +104,16 @@ export const FileUpload = memo((props: FileUploadProps) => {
       }
     } else if (e.dataTransfer.files && e.dataTransfer.files.length < limit) {
       setFiles(Array.from(e.dataTransfer.files));
+      onFileChange?.([e.dataTransfer.files[0]]);
     } else setError('The number of files exceeds the limit.')
   }
 
-  function handleDrag(e: React.DragEvent<HTMLFormElement>) {
+  function handleDrag(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     setDrag(true);
   }
 
-  function handleLeave(e: React.DragEvent<HTMLFormElement>) {
+  function handleLeave(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     setDrag(false);
   }
@@ -122,7 +129,7 @@ export const FileUpload = memo((props: FileUploadProps) => {
   }
 
   return (
-    <form
+    <div
       className={classNames(cls.form, mods, [])}
       onDragEnter={e => handleDrag(e)}
       onDragOver={e => handleDrag(e)}
@@ -133,6 +140,7 @@ export const FileUpload = memo((props: FileUploadProps) => {
       <label className={cls.label}>
         <span className={cls.labelSpan}>Select a file</span>
         <Input
+          id={id}
           accept=".json"
           type="file"
           className={cls.input}
@@ -167,6 +175,6 @@ export const FileUpload = memo((props: FileUploadProps) => {
           </Button>
         </>
       }
-    </form>
+    </div>
   );
 });

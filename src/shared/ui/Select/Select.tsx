@@ -9,9 +9,9 @@ interface SelectProps<T extends string> {
   className?: string;
   label?: string;
   options?: string[];
-  value?: T;
-  onChange?: (value: T) => void;
+  id?: string;
   readonly?: boolean;
+  onSelectChange?: (value: string) => void;
 }
 
 export const Select = <T extends string>(props: SelectProps<T>) => {
@@ -19,14 +19,14 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
     className,
     label,
     options,
-    value,
-    onChange,
     readonly,
+    onSelectChange,
+    id,
   } = props;
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [inputValue, setInputValue] = useState(value || '');
+  const [value, setValue] = useState('');
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -37,17 +37,17 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
     return options.filter(opt => opt.toLowerCase().includes(searchTerm.toLowerCase()));
   }, [options, searchTerm]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-    setSearchTerm(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setValue(value);
+    setSearchTerm(value);
+    onSelectChange?.(value);
   };
 
   const handleOptionClick = (optionValue: T) => {
-    if (onChange) {
-      onChange(optionValue);
-    }
+    onSelectChange?.(optionValue);
     toggleDropdown();
-    setInputValue(optionValue);
+    setValue(optionValue);
   };
 
   const optionList = filteredOptions.map((opt) => (
@@ -69,11 +69,11 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
     <div className={classNames(cls.Wrapper, mods, [className])}>
       <div className={cls.select} onClick={toggleDropdown}>
         <input
-          id={label}
+          id={id}
           type="text"
-          value={inputValue}
+          value={value}
           placeholder={label}
-          onChange={handleInputChange}
+          onChange={handleChange}
           className={cls.input}
         />
         <span className={cls.arrow}>

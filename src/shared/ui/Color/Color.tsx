@@ -7,41 +7,41 @@ import cls from './Color.module.scss';
 
 interface ColorProps {
   className?: string;
-  label?: string;
   options: string[];
   readonly?: boolean;
-  value?: string;
-  onChange?: (value: string) => void;
+  id?: string;
+  onColorChange?: (value: string) => void;
+  required: boolean;
 }
 
 
 export const Color = memo((props: ColorProps) => {
   const {
     className,
-    label,
     options,
     readonly,
-    value,
-    onChange
+    id,
+    required,
+    onColorChange
   } = props;
 
   const [isOpen, setIsOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(value || '');
+  const [value, setValue] = useState(options[0]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setValue(value);
+    onColorChange?.(value);
   };
 
   const handleOptionClick = (optionValue: string) => {
-    if (onChange) {
-      onChange(optionValue);
-    }
     toggleDropdown();
-    setInputValue(optionValue);
+    setValue(optionValue);
+    onColorChange?.(value);
   };
 
   const optionList = options.map((opt) => (
@@ -68,12 +68,12 @@ export const Color = memo((props: ColorProps) => {
         onClick={toggleDropdown}
       >
         <input
-          id={label}
+          id={id}
           type="color"
-          value={inputValue}
-          placeholder={label}
-          onChange={handleInputChange}
+          value={value}
+          onChange={handleChange}
           className={cls.input}
+          required={required}
         />
         <span className={cls.arrow}>
           <Arrow />

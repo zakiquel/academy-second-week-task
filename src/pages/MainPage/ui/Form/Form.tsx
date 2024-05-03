@@ -25,17 +25,13 @@ export const Form = memo((props: FormProps) => {
   } = props;
 
   const [inputErrors, setInputErrors] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState<Record<string, string | File[]>>({});
 
-  const handleInputChange = (id: string, value: string) => {
-    setFormData((prevData) => {
-      const updatedData = {
+  const handleChange = (id: string, value: string | File[]) => {
+    setFormData((prevData) => ({
         ...prevData,
         [id]: value,
-      };
-      console.log("Form data: ", updatedData);
-      return updatedData;
-    });
+      }));
   };
 
   return (
@@ -44,43 +40,49 @@ export const Form = memo((props: FormProps) => {
         <h2>{jsonData.form_name}</h2>
         <p className={cls.description}>{jsonData.form_description}</p>
         {jsonData.form_fields.map((field) => {
-          const inputField = field as InputField;
-          const selectField = field as SelectField;
-          const areaField = field as InputField;
-          const colorField = field as ColorField;
-          const fileField = field as FileField;
+          const input = field as InputField;
+          const select = field as SelectField;
+          const area = field as InputField;
+          const color = field as ColorField;
+          const file = field as FileField;
           switch (field.type) {
             case FieldTypes.TEXT:
             case FieldTypes.PASSWORD:
               return (
                 <Input
-                  id={inputField.id}
-                  key={inputField.id}
-                  type={inputField.type}
+                  id={input.id}
+                  key={input.id}
+                  type={input.type}
                   onInputChange={(value) =>
-                    handleInputChange(field.id, value)}
-                  required={inputField.required}
-                  placeholder={inputField.placeholder}
-                  maxLength={inputField.maxlength}
-                  minLength={inputField.minlength}
-                  pattern={inputField.pattern}
-                  mask={inputField.mask}
+                    handleChange(input.id, value)}
+                  required={input.required}
+                  placeholder={input.placeholder}
+                  maxLength={input.maxlength}
+                  minLength={input.minlength}
+                  pattern={input.pattern}
+                  mask={input.mask}
                   setInputErrors={setInputErrors}
                 />
               );
             case FieldTypes.SELECT:
               return (
                 <Select
-                  key={selectField.id}
-                  label={selectField.label}
-                  options={selectField.options}
+                  key={select.id}
+                  label={select.label}
+                  onSelectChange={(value) =>
+                    handleChange(select.id, value)}
+                  options={select.options}
                 />
               );
             case FieldTypes.CHECKBOX:
               return (
                 <Checkbox
                   label={field.label}
+                  key={field.id}
                   required={field.required}
+                  onCheckboxChange={(value) =>
+                    handleChange(field.id, value)
+                  }
                   id={field.id}
                 />
               );
@@ -88,23 +90,38 @@ export const Form = memo((props: FormProps) => {
               return (
                 <FileUpload
                   multiply
+                  id={field.id}
                   max
-                  limit={fileField.max_count}
+                  key={field.id}
+                  onFileChange={(value) =>
+                    handleChange(field.id, value)
+                  }
+                  limit={file.max_count}
                 />
               );
             case FieldTypes.TEXTAREA:
               return (
                 <TextArea
-                  id={areaField.id}
-                  required={areaField.required}
-                  placeholder={areaField.placeholder}
-                  maxLength={areaField.maxlength}
+                  id={area.id}
+                  required={area.required}
+                  onTextChange={(value) =>
+                    handleChange(area.id, value)
+                  }
+                  placeholder={area.placeholder}
+                  maxLength={area.maxlength}
+                  key={area.id}
                 />
               );
             case FieldTypes.COLOR:
               return (
                 <Color
-                  options={colorField.options}
+                  options={color.options}
+                  key={color.id}
+                  id={color.id}
+                  required={color.required}
+                  onColorChange={(value) =>
+                    handleChange(color.id, value)
+                  }
                 />
               );
             default:
