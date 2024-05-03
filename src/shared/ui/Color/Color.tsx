@@ -1,13 +1,13 @@
-import React, {memo, useState} from 'react';
-import {classNames, Mods} from "@/shared/lib/classNames/classNames";
+import React, { memo, useState } from 'react';
+
 import Arrow from "@/shared/assets/icons/arrow.svg";
+import { classNames, Mods } from "@/shared/lib/classNames/classNames";
 
 import cls from './Color.module.scss';
 
 interface ColorProps {
   className?: string;
   label?: string;
-  required?: boolean;
   options: string[];
   readonly?: boolean;
   value?: string;
@@ -24,17 +24,6 @@ export const Color = memo((props: ColorProps) => {
     value,
     onChange
   } = props;
-
-  const optionList = options.map((opt) => (
-    <div
-      key={opt}
-      className={cls.option}
-      onClick={() => handleOptionClick(opt)}
-    >
-      <div style={{backgroundColor: `${opt}`, width: "30px", height: "30px"}}>
-      </div>
-    </div>
-  ));
 
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState(value || '');
@@ -54,6 +43,16 @@ export const Color = memo((props: ColorProps) => {
     toggleDropdown();
     setInputValue(optionValue);
   };
+
+  const optionList = options.map((opt) => (
+    <div
+      key={opt}
+      className={cls.option}
+      onClick={() => handleOptionClick(opt)}
+    >
+      <div style={{ backgroundColor: `${opt}`, width: "30px", height: "30px" }} />
+    </div>
+  ));
 
   const mods: Mods = {
     [cls.readonly]: readonly,

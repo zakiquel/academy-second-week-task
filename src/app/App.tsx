@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+
 import { AppRouter } from './providers/router'
 
 function App() {

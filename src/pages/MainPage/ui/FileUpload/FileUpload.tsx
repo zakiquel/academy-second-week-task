@@ -1,11 +1,16 @@
-import React, {ChangeEvent, memo, useState} from 'react';
-import cls from './FileUpload.module.scss';
-import {classNames, Mods} from "@/shared/lib/classNames/classNames";
-import {Input} from "@/shared/ui/Input";
-import {Icon} from "@/shared/ui/Icon";
+import React, { ChangeEvent, memo, useState } from 'react';
+
+import { Data } from "../../model/types/data";
+
 import FileIcon from "@/shared/assets/icons/file.svg";
-import {Button, ButtonTheme} from "@/shared/ui/Button";
-import {Data} from "../../model/types/data";
+import { classNames, Mods } from "@/shared/lib/classNames/classNames";
+import { Button, ButtonTheme } from "@/shared/ui/Button";
+import { Icon } from "@/shared/ui/Icon";
+import { Input } from "@/shared/ui/Input";
+
+import cls from './FileUpload.module.scss';
+
+
 
 interface FileUploadProps {
   setJsonData?: (data: Data) => void;
@@ -28,7 +33,7 @@ export const FileUpload = memo((props: FileUploadProps) => {
   const [error, setError] = useState<string>('');
   const [files, setFiles] = useState<File[]>([]);
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setError('');
 
@@ -49,7 +54,6 @@ export const FileUpload = memo((props: FileUploadProps) => {
             }
           } catch (error) {
             setError('Error parsing JSON file');
-            console.error('Error parsing JSON file', error);
           }
         };
 
@@ -107,7 +111,7 @@ export const FileUpload = memo((props: FileUploadProps) => {
     setDrag(false);
   }
 
-  function handleReset() {
+  const handleReset = () => {
     setFiles([]);
     setError('');
   }
@@ -147,7 +151,7 @@ export const FileUpload = memo((props: FileUploadProps) => {
       {files.length > 0 &&
         <>
           <ul className={cls.fileList}>
-            {files.map(({name}, id) =>
+            {files.map(({ name }, id) =>
               <li className={cls.file} key={id}>
                 {name}
               </li>)

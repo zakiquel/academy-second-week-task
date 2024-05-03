@@ -1,15 +1,13 @@
 import React, { useMemo, useState } from 'react';
 
-import { classNames, Mods } from "@/shared/lib/classNames/classNames";
 import Arrow from "@/shared/assets/icons/arrow.svg";
-import cls from './Select.module.scss';
+import { classNames, Mods } from "@/shared/lib/classNames/classNames";
 
+import cls from './Select.module.scss';
 
 interface SelectProps<T extends string> {
   className?: string;
   label?: string;
-  required?: boolean;
-  multiple?: boolean;
   options?: string[];
   value?: T;
   onChange?: (value: T) => void;

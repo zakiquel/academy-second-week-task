@@ -50,6 +50,7 @@ module.exports = {
     'jsx-a11y/anchor-is-valid': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
     'no-undef': 'off',
+    'no-case-declarations': 'off',
     'react/no-array-index-key': 'off',
     'zavalition-fsd/path-checker': ['error', { alias: '@' } ],
     'zavalition-fsd/layer-imports': [

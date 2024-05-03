@@ -1,6 +1,8 @@
 import React, { memo } from 'react';
+
+import { classNames } from "@/shared/lib/classNames/classNames";
+
 import cls from './Checkbox.module.scss';
-import {classNames} from "@/shared/lib/classNames/classNames";
 
 interface CheckboxProps {
   className?: string;
@@ -13,7 +15,8 @@ export const Checkbox = memo((props: CheckboxProps) => {
   const {
     className,
     label,
-    id
+    id,
+    required
   } = props;
   return (
     <div className={classNames(cls.Checkbox, {}, [className])}>
@@ -21,6 +24,7 @@ export const Checkbox = memo((props: CheckboxProps) => {
         type="checkbox"
         className={cls.input}
         id={id}
+        required={required}
       />
       <label
         htmlFor={id}

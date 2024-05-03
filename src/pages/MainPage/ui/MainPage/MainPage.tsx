@@ -1,8 +1,10 @@
-import React, {memo, useState} from 'react';
+import React, { memo, useState } from 'react';
+
+import { Data } from "../../model/types/data";
+import { FileUpload } from "../FileUpload/FileUpload";
+import { Form } from "../Form";
+
 import cls from './MainPage.module.scss'
-import {FileUpload} from "../FileUpload/FileUpload";
-import {Data} from "../../model/types/data";
-import {Form} from "../Form";
 
 const MainPage = () => {
   const [jsonData, setJsonData] = useState<Data>();

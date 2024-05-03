@@ -1,4 +1,5 @@
 import { memo } from 'react';
+
 import cls from './TextArea.module.scss';
 
 interface TextAreaProps {

@@ -4,7 +4,7 @@ import React, {
   memo, useState
 } from 'react';
 
-import {classNames, Mods} from "@/shared/lib/classNames/classNames";
+import { classNames, Mods } from "@/shared/lib/classNames/classNames";
 
 import cls from './Input.module.scss';
 
@@ -20,7 +20,6 @@ const dateMsg = 'Укажите дату в правильном формате'
 
 interface InputProps extends HTMLInputProps {
   className?: string;
-  value?: string | number;
   label?: string;
   autofocus?: boolean;
   readonly?: boolean;
@@ -28,12 +27,12 @@ interface InputProps extends HTMLInputProps {
   pattern?: string;
   setInputErrors?: (value: boolean) => void;
   id?: string;
+  onInputChange?: (value: string) => void;
 }
 
 export const Input = memo((props: InputProps) => {
   const {
     className,
-    value,
     type = 'text',
     placeholder,
     autofocus,
@@ -43,19 +42,23 @@ export const Input = memo((props: InputProps) => {
     pattern,
     id,
     setInputErrors,
+    onInputChange,
     ...otherProps
   } = props;
 
   const [validationMessage, setValidationMessage] = useState<string>('');
   const [dirty, setDirty] = useState<boolean>(false);
+  const [value, setValue] = useState<string>('');
 
-  const handleChange = (e: FocusEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValidationMessage(e.target.validationMessage);
     if (!e.target.validationMessage) {
       setInputErrors?.(false);
     } else {
       setInputErrors?.(true);
     }
+    setValue(e.target.value);
+    onInputChange?.(e.target.value);
   };
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
@@ -74,6 +77,7 @@ export const Input = memo((props: InputProps) => {
       case 'date':
         msg = dateMsg;
         break;
+      default:
     }
     if (pattern) {
       const isValid = new RegExp(pattern).test(e.target.value);
@@ -97,6 +101,7 @@ export const Input = memo((props: InputProps) => {
       <label>
         <span>{label}</span>
         <input
+          id={id}
           type={type}
           value={value}
           className={classNames(cls.input, inputMods)}

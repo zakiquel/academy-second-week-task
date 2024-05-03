@@ -1,5 +1,6 @@
-import { Route, type RouteProps, Routes } from 'react-router-dom'
 import { memo, Suspense, useCallback } from 'react'
+import { Route, type RouteProps, Routes } from 'react-router-dom'
+
 import { routeConfig } from '../config/routeConfig'
 
 const AppRouter = () => {
