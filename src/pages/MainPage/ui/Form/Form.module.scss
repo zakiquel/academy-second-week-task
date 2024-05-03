@@ -1,0 +1,24 @@
+.Form {
+  width: 40%;
+  padding: 20px;
+  box-shadow: 0 1px 5px var(--box-shadow);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &:hover {
+    box-shadow: 0 0 15px var(--box-shadow);
+  }
+}
+
+.description {
+  margin-bottom: 10px;
+}
+
+.btns {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
