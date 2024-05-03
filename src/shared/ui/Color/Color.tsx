@@ -1,50 +1,53 @@
-import React, { useMemo, useState } from 'react';
-
-import { classNames, Mods } from "@/shared/lib/classNames/classNames";
+import React, {memo, useState} from 'react';
+import {classNames, Mods} from "@/shared/lib/classNames/classNames";
 import Arrow from "@/shared/assets/icons/arrow.svg";
-import cls from './Select.module.scss';
 
+import cls from './Color.module.scss';
 
-interface SelectProps<T extends string> {
+interface ColorProps {
   className?: string;
   label?: string;
   required?: boolean;
-  multiple?: boolean;
-  options?: string[];
-  value?: T;
-  onChange?: (value: T) => void;
+  options: string[];
   readonly?: boolean;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
-export const Select = <T extends string>(props: SelectProps<T>) => {
+
+export const Color = memo((props: ColorProps) => {
   const {
     className,
     label,
     options,
-    value,
-    onChange,
     readonly,
+    value,
+    onChange
   } = props;
 
+  const optionList = options.map((opt) => (
+    <div
+      key={opt}
+      className={cls.option}
+      onClick={() => handleOptionClick(opt)}
+    >
+      <div style={{backgroundColor: `${opt}`, width: "30px", height: "30px"}}>
+      </div>
+    </div>
+  ));
+
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const [inputValue, setInputValue] = useState(value || '');
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const filteredOptions = useMemo(() => {
-    if (!options) return [];
-    return options.filter(opt => opt.toLowerCase().includes(searchTerm.toLowerCase()));
-  }, [options, searchTerm]);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-    setSearchTerm(e.target.value);
   };
 
-  const handleOptionClick = (optionValue: T) => {
+  const handleOptionClick = (optionValue: string) => {
     if (onChange) {
       onChange(optionValue);
     }
@@ -52,27 +55,22 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
     setInputValue(optionValue);
   };
 
-  const optionList = filteredOptions.map((opt) => (
-    <div
-      key={opt}
-      className={cls.option}
-      onClick={() => handleOptionClick(opt as T)}
-    >
-      {opt}
-    </div>
-  ));
-
   const mods: Mods = {
     [cls.readonly]: readonly,
     [cls.open]: isOpen
   };
 
   return (
-    <div className={classNames(cls.Wrapper, mods, [className])}>
-      <div className={cls.select} onClick={toggleDropdown}>
+    <div
+      className={classNames(cls.Wrapper, mods, [className])}
+    >
+      <div
+        className={cls.select}
+        onClick={toggleDropdown}
+      >
         <input
           id={label}
-          type="text"
+          type="color"
           value={inputValue}
           placeholder={label}
           onChange={handleInputChange}
@@ -89,4 +87,4 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
       }
     </div>
   );
-};
+});

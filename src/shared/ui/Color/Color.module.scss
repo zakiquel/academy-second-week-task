@@ -1,0 +1,51 @@
+.Wrapper {
+  margin-top: 10px;
+  width: 100px;
+}
+
+.select {
+  display: flex;
+  position: relative;
+  border: 1px solid var(--border);
+  padding: 8px;
+  box-shadow: 0 1px 5px var(--light);
+}
+
+.input {
+  width: 35px;
+  height: 35px;
+  pointer-events: none;
+  position: relative;
+  border: none;
+}
+
+.dropdown {
+  display: flex;
+  margin-top: 5px;
+  width: 100%;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 5px var(--light);
+}
+
+.option {
+  padding: 15px 10px;
+  background: var(--white);
+
+  &:hover {
+    background-color: var(--greyS);
+  }
+}
+
+.arrow {
+  position: absolute;
+  top: 25%;
+  right: 5%;
+}
+
+.readonly {
+  opacity: 0.8;
+}
+
+.label {
+  margin-right: 5px;
+}

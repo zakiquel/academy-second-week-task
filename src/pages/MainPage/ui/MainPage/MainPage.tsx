@@ -1,12 +1,13 @@
 import React, {memo, useState} from 'react';
 import cls from './MainPage.module.scss'
 import {FileUpload} from "@/pages/MainPage/ui/FileUpload/FileUpload";
-import {ButtonTypes, Data, FieldTypes, FileField, InputField, SelectField} from "../../model/types/data";
+import {ButtonTypes, ColorField, Data, FieldTypes, InputField, SelectField} from "../../model/types/data";
 import {Input} from "@/shared/ui/Input";
 import {Button, ButtonTheme} from "@/shared/ui/Button";
 import {Select} from "@/shared/ui/Select";
 import {Checkbox} from "@/shared/ui/Checkbox";
 import {TextArea} from "@/shared/ui/TextArea";
+import {Color} from "@/shared/ui/Color";
 
 const MainPage = () => {
   const [jsonData, setJsonData] = useState<Data>();
@@ -77,7 +78,6 @@ const MainPage = () => {
                       />
                     )
                   case FieldTypes.FILE:
-                    const fField = field as FileField;
                       return (
                         <FileUpload
                           multiply
@@ -93,6 +93,13 @@ const MainPage = () => {
                         required={aField.required}
                         placeholder={aField.placeholder}
                         maxLength={aField.maxlength}
+                      />
+                    )
+                  case FieldTypes.COLOR:
+                    const cField = field as ColorField;
+                    return (
+                      <Color
+                        options={cField.options}
                       />
                     )
                 }
