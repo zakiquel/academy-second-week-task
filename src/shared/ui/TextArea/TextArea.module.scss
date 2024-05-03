@@ -1,0 +1,17 @@
+.area {
+  resize: none;
+  border-color: var(--border);
+  box-shadow: 0 1px 5px var(--light);
+  border-radius: 5px;
+  padding: 25px;
+  width: 100%;
+
+  &:hover {
+    box-shadow: 0 2px 8px var(--light);
+  }
+
+  &:focus,
+  &:active {
+    outline: 2px solid var(--purple);
+  }
+}

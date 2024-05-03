@@ -1,6 +1,6 @@
 import React, {ChangeEvent, memo, useState} from 'react';
 import cls from './FileUpload.module.scss';
-import {classNames} from "@/shared/lib/classNames/classNames";
+import {classNames, Mods} from "@/shared/lib/classNames/classNames";
 import {Input} from "@/shared/ui/Input";
 import {Icon} from "@/shared/ui/Icon";
 import FileIcon from "@/shared/assets/icons/file.svg";
@@ -10,10 +10,19 @@ import {Data} from "../../model/types/data";
 interface FileUploadProps {
   setJsonData?: (data: Data) => void;
   multiply?: boolean;
+  max?: boolean;
+  jsonOnly?: boolean;
+  limit: number;
 }
 
 export const FileUpload = memo((props: FileUploadProps) => {
-  const {setJsonData, multiply} = props;
+  const {
+    setJsonData,
+    multiply,
+    max,
+    jsonOnly,
+    limit
+  } = props;
 
   const [drag, setDrag] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -23,12 +32,12 @@ export const FileUpload = memo((props: FileUploadProps) => {
     e.preventDefault();
     setError('');
 
-    if (e.target.files && e.target.files[0]) {
+    if (jsonOnly && e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const extension = file.name.split('.').pop()?.toLowerCase();
 
       if (extension === 'json') {
-        setFiles(Array.from(e.target.files));
+        setFiles([e.target.files[0]]);
 
         const reader = new FileReader();
 
@@ -48,7 +57,9 @@ export const FileUpload = memo((props: FileUploadProps) => {
       } else {
         setError('Invalid file type. Please select a .json file.');
       }
-    }
+    } else if (e.target.files && e.target.files.length < limit) {
+      setFiles(Array.from(e.target.files));
+    } else setError('The number of files exceeds the limit.')
   }
 
   function handleDrop(e: React.DragEvent<HTMLFormElement>) {
@@ -56,12 +67,12 @@ export const FileUpload = memo((props: FileUploadProps) => {
     setDrag(false);
     setError('');
 
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    if (jsonOnly && e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       const extension = file.name.split('.').pop()?.toLowerCase();
 
       if (extension === 'json') {
-        setFiles(Array.from(e.dataTransfer.files));
+        setFiles([e.dataTransfer.files[0]]);
 
         const reader = new FileReader();
 
@@ -81,7 +92,9 @@ export const FileUpload = memo((props: FileUploadProps) => {
       } else {
         setError('Invalid file type. Please select a .json file.');
       }
-    }
+    } else if (e.dataTransfer.files && e.dataTransfer.files.length < limit) {
+      setFiles(Array.from(e.dataTransfer.files));
+    } else setError('The number of files exceeds the limit.')
   }
 
   function handleDrag(e: React.DragEvent<HTMLFormElement>) {
@@ -99,9 +112,14 @@ export const FileUpload = memo((props: FileUploadProps) => {
     setError('');
   }
 
+  const mods: Mods = {
+    [cls.drag]: drag,
+    [cls.max]: max
+  }
+
   return (
     <form
-      className={classNames(cls.form, {[cls.drag]: drag})}
+      className={classNames(cls.form, mods, [])}
       onDragEnter={e => handleDrag(e)}
       onDragOver={e => handleDrag(e)}
       onDragLeave={e => handleLeave(e)}
@@ -139,8 +157,9 @@ export const FileUpload = memo((props: FileUploadProps) => {
             type="reset"
             className={cls.resetBtn}
             theme={ButtonTheme.CLEAR}
+            onClick={handleReset}
           >
-            <span>Delete file</span>
+            <span>Delete files</span>
           </Button>
         </>
       }
