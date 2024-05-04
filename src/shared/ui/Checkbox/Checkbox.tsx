@@ -10,6 +10,7 @@ interface CheckboxProps {
   required?: boolean;
   id?: string;
   onCheckboxChange?: (value: string) => void;
+  setInputErrors?: (value: boolean) => void;
 }
 
 export const Checkbox = memo((props: CheckboxProps) => {
@@ -18,12 +19,18 @@ export const Checkbox = memo((props: CheckboxProps) => {
     label,
     id,
     required,
-    onCheckboxChange
+    onCheckboxChange,
+    setInputErrors
   } = props;
 
   const [value, setValue] = useState<boolean>(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.validationMessage) {
+      setInputErrors?.(false);
+    } else {
+      setInputErrors?.(true);
+    }
     const value = e.target.checked;
     setValue(value);
     onCheckboxChange?.(JSON.stringify(value));

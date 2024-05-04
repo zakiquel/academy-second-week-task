@@ -12,6 +12,7 @@ interface SelectProps<T extends string> {
   id?: string;
   readonly?: boolean;
   onSelectChange?: (value: string) => void;
+  setInputErrors?: (value: boolean) => void;
 }
 
 export const Select = <T extends string>(props: SelectProps<T>) => {
@@ -22,6 +23,7 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
     readonly,
     onSelectChange,
     id,
+    setInputErrors,
   } = props;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -38,6 +40,11 @@ export const Select = <T extends string>(props: SelectProps<T>) => {
   }, [options, searchTerm]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.validationMessage) {
+      setInputErrors?.(false);
+    } else {
+      setInputErrors?.(true);
+    }
     const { value } = e.target;
     setValue(value);
     setSearchTerm(value);

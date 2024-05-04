@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { ChangeEvent, memo, useEffect, useState } from 'react';
 
 import { FileUpload } from '../FileUpload/FileUpload';
 
@@ -34,7 +34,12 @@ export const Form = memo((props: FormProps) => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formData, setFormData] = useState<Record<string, string | File[]>>({});
 
-  const handleSubmit = async () => {
+  useEffect(() => {
+    setFormData({});
+  }, [jsonData]);
+
+  const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
+    if (!e.target.validationMessage) {
       try {
         const response = await fetch('http://localhost:8000/data', {
           method: 'POST',
@@ -44,15 +49,14 @@ export const Form = memo((props: FormProps) => {
           body: JSON.stringify(formData),
         });
 
-        console.log(response)
-
         if (!response) {
           throw new Error('No response');
         }
       } catch (error) {
         throw new Error('Fetching error');
       }
-    setSubmitted(true);
+      setSubmitted(true);
+    }
   };
 
   const handleChange = (id: string, value: string | File[]) => {
@@ -64,11 +68,16 @@ export const Form = memo((props: FormProps) => {
 
   const handleReset = () => {
     setData?.(undefined);
+    setFormData({});
   }
 
   const handleModalClose = () => {
     setSubmitted(false);
+    setFormData({});
+    setData?.(undefined);
   }
+  
+  const disabled = (inputErrors || Object.keys(formData).length === 0)
 
   return (
     jsonData && (
@@ -120,6 +129,7 @@ export const Form = memo((props: FormProps) => {
                   onSelectChange={(value) =>
                     handleChange(select.id, value)}
                   options={select.options}
+                  setInputErrors={setInputErrors}
                 />
               );
             case FieldTypes.CHECKBOX:
@@ -132,6 +142,7 @@ export const Form = memo((props: FormProps) => {
                     handleChange(field.id, value)
                   }
                   id={field.id}
+                  setInputErrors={setInputErrors}
                 />
               );
             case FieldTypes.FILE:
@@ -145,6 +156,7 @@ export const Form = memo((props: FormProps) => {
                     handleChange(field.id, value)
                   }
                   limit={file.max_count}
+                  setInputErrors={setInputErrors}
                 />
               );
             case FieldTypes.TEXTAREA:
@@ -158,6 +170,7 @@ export const Form = memo((props: FormProps) => {
                   placeholder={area.placeholder}
                   maxLength={area.maxlength}
                   key={area.id}
+                  setInputErrors={setInputErrors}
                 />
               );
             case FieldTypes.COLOR:
@@ -170,6 +183,7 @@ export const Form = memo((props: FormProps) => {
                   onColorChange={(value) =>
                     handleChange(color.id, value)
                   }
+                  setInputErrors={setInputErrors}
                 />
               );
             default:
@@ -181,10 +195,10 @@ export const Form = memo((props: FormProps) => {
             btn.type === ButtonTypes.SUBMIT ? (
               <Button
                 key={btn.name}
-                disabled={inputErrors}
+                disabled={disabled}
                 theme={ButtonTheme.PURPLE}
                 type={btn.type}
-                onClick={handleSubmit}
+                onClick={_ => handleSubmit}
               >
                 {btn.name}
               </Button>

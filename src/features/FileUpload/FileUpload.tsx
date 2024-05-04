@@ -10,8 +10,6 @@ import { Input } from "@/shared/ui/Input";
 
 import cls from './FileUpload.module.scss';
 
-
-
 interface FileUploadProps {
   setJsonData?: (data: Data) => void;
   multiply?: boolean;
@@ -20,6 +18,7 @@ interface FileUploadProps {
   limit: number;
   id?: string;
   onFileChange?: (value: File[]) => void;
+  setInputErrors?: (value: boolean) => void;
 }
 
 export const FileUpload = memo((props: FileUploadProps) => {
@@ -30,7 +29,8 @@ export const FileUpload = memo((props: FileUploadProps) => {
     jsonOnly,
     limit,
     onFileChange,
-    id
+    id,
+    setInputErrors
   } = props;
 
   const [drag, setDrag] = useState<boolean>(false);
@@ -39,6 +39,11 @@ export const FileUpload = memo((props: FileUploadProps) => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    if (!e.target.validationMessage) {
+      setInputErrors?.(false);
+    } else {
+      setInputErrors?.(true);
+    }
     setError('');
 
     if (jsonOnly && e.target.files && e.target.files[0]) {

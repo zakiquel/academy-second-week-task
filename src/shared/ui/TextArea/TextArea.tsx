@@ -9,6 +9,7 @@ interface TextAreaProps {
   id: string;
   label?: string;
   onTextChange?: (value: string) => void;
+  setInputErrors?: (value: boolean) => void;
 }
 
 export const TextArea = memo((props: TextAreaProps) => {
@@ -18,12 +19,18 @@ export const TextArea = memo((props: TextAreaProps) => {
     placeholder,
     maxLength,
     id,
-    onTextChange
+    onTextChange,
+    setInputErrors
   } = props;
 
   const [value, setValue] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (!e.target.validationMessage) {
+      setInputErrors?.(false);
+    } else {
+      setInputErrors?.(true);
+    }
     const { value } = e.target;
     setValue(value);
     onTextChange?.(value);

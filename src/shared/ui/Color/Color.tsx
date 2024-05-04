@@ -12,6 +12,7 @@ interface ColorProps {
   id?: string;
   onColorChange?: (value: string) => void;
   required: boolean;
+  setInputErrors?: (value: boolean) => void;
 }
 
 
@@ -22,7 +23,8 @@ export const Color = memo((props: ColorProps) => {
     readonly,
     id,
     required,
-    onColorChange
+    onColorChange,
+    setInputErrors
   } = props;
 
   const [isOpen, setIsOpen] = useState(false);
@@ -33,6 +35,11 @@ export const Color = memo((props: ColorProps) => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.validationMessage) {
+      setInputErrors?.(false);
+    } else {
+      setInputErrors?.(true);
+    }
     const { value } = e.target;
     setValue(value);
     onColorChange?.(value);
