@@ -2,6 +2,8 @@ import React, { memo, useState } from 'react';
 
 import { FileUpload } from '../FileUpload/FileUpload';
 
+import { FormModal } from './FormModal/FormModal';
+
 import Cross from "@/shared/assets/icons/cross.svg";
 import { classNames } from "@/shared/lib/classNames/classNames";
 import { ButtonTypes, ColorField, Data, FieldTypes, FileField, InputField, SelectField } from "@/shared/types/data";
@@ -29,7 +31,7 @@ export const Form = memo((props: FormProps) => {
   } = props;
 
   const [inputErrors, setInputErrors] = useState<boolean>(false);
-  const [_, setSubmitted] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const [formData, setFormData] = useState<Record<string, string | File[]>>({});
 
   const handleSubmit = async () => {
@@ -64,6 +66,10 @@ export const Form = memo((props: FormProps) => {
     setData?.(undefined);
   }
 
+  const handleModalClose = () => {
+    setSubmitted(false);
+  }
+
   return (
     jsonData && (
       <form
@@ -75,9 +81,9 @@ export const Form = memo((props: FormProps) => {
           onClick={handleReset}
           square
           size={ButtonSize.L}
-          theme={ButtonTheme.PURPLE}
+          theme={ButtonTheme.OUTLINE}
         >
-          <Icon Svg={Cross} />
+          <Icon Svg={Cross} inverted />
         </Button>
         <h2>{jsonData.form_name}</h2>
         <p className={cls.description}>{jsonData.form_description}</p>
@@ -193,6 +199,10 @@ export const Form = memo((props: FormProps) => {
               </Button>
           ))}
         </div>
+        <FormModal
+          isOpen={submitted}
+          onClose={handleModalClose}
+        />
       </form>
     )
   );

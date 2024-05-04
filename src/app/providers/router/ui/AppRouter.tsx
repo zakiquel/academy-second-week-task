@@ -3,10 +3,12 @@ import { Route, type RouteProps, Routes } from 'react-router-dom'
 
 import { routeConfig } from '../config/routeConfig'
 
+import { Loader } from "@/shared/ui/Loader";
+
 const AppRouter = () => {
   const renderWithWrapper = useCallback((route: RouteProps) => {
     const element = (
-      <Suspense fallback='Загрузка...'>
+      <Suspense fallback={<Loader />}>
         {route.element}
       </Suspense>
     )
