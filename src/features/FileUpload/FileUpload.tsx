@@ -1,6 +1,6 @@
 import React, { ChangeEvent, memo, useState } from 'react';
 
-import { Data } from "../../model/types/data";
+import { Data } from "../../shared/types/data";
 
 import FileIcon from "@/shared/assets/icons/file.svg";
 import { classNames, Mods } from "@/shared/lib/classNames/classNames";

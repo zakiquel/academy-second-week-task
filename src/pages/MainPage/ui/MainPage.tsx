@@ -1,13 +1,14 @@
 import React, { memo, useState } from 'react';
 
-import { Data } from "../../model/types/data";
-import { FileUpload } from "../FileUpload/FileUpload";
-import { Form } from "../Form";
+import { FileUpload } from '@/features/FileUpload';
+import { Form } from "@/features/Form";
+import { Data } from "@/shared/types/data";
 
 import cls from './MainPage.module.scss'
 
 const MainPage = () => {
   const [jsonData, setJsonData] = useState<Data>();
+
 
   return (
     <main className={cls.MainPage}>
@@ -19,6 +20,7 @@ const MainPage = () => {
         />
         <Form
           jsonData={jsonData}
+          setData={setJsonData}
         />
       </div>
     </main>

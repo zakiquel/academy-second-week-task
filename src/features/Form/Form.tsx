@@ -1,12 +1,14 @@
 import React, { memo, useState } from 'react';
 
-import { ButtonTypes, ColorField, Data, FieldTypes, FileField, InputField, SelectField } from "../../model/types/data";
 import { FileUpload } from '../FileUpload/FileUpload';
 
+import Cross from "@/shared/assets/icons/cross.svg";
 import { classNames } from "@/shared/lib/classNames/classNames";
-import { Button, ButtonTheme } from "@/shared/ui/Button";
+import { ButtonTypes, ColorField, Data, FieldTypes, FileField, InputField, SelectField } from "@/shared/types/data";
+import { Button, ButtonSize, ButtonTheme } from "@/shared/ui/Button";
 import { Checkbox } from "@/shared/ui/Checkbox";
 import { Color } from "@/shared/ui/Color";
+import { Icon } from "@/shared/ui/Icon";
 import { Input } from "@/shared/ui/Input";
 import { Select } from "@/shared/ui/Select";
 import { TextArea } from "@/shared/ui/TextArea";
@@ -16,12 +18,14 @@ import cls from './Form.module.scss';
 interface FormProps {
   className?: string;
   jsonData?: Data;
+  setData?: (value: Data | undefined) => void;
 }
 
 export const Form = memo((props: FormProps) => {
   const {
     jsonData,
-    className
+    className,
+    setData
   } = props;
 
   const [inputErrors, setInputErrors] = useState<boolean>(false);
@@ -37,6 +41,8 @@ export const Form = memo((props: FormProps) => {
           },
           body: JSON.stringify(formData),
         });
+
+        console.log(response)
 
         if (!response) {
           throw new Error('No response');
@@ -54,12 +60,25 @@ export const Form = memo((props: FormProps) => {
       }));
   };
 
+  const handleReset = () => {
+    setData?.(undefined);
+  }
+
   return (
     jsonData && (
       <form
         className={classNames(cls.Form, {}, [className])}
         onSubmit={(e) => e.preventDefault()}
       >
+        <Button
+          className={cls.reset}
+          onClick={handleReset}
+          square
+          size={ButtonSize.L}
+          theme={ButtonTheme.PURPLE}
+        >
+          <Icon Svg={Cross} />
+        </Button>
         <h2>{jsonData.form_name}</h2>
         <p className={cls.description}>{jsonData.form_description}</p>
         {jsonData.form_fields.map((field) => {
@@ -153,15 +172,25 @@ export const Form = memo((props: FormProps) => {
         })}
         <div className={cls.btns}>
           {jsonData.form_buttons.map((btn) => (
-            <Button
-              key={btn.name}
-              disabled={btn.type === ButtonTypes.SUBMIT && inputErrors}
-              theme={ButtonTheme.PURPLE}
-              type={btn.type}
-              onClick={handleSubmit}
-            >
-              {btn.name}
-            </Button>
+            btn.type === ButtonTypes.SUBMIT ? (
+              <Button
+                key={btn.name}
+                disabled={inputErrors}
+                theme={ButtonTheme.PURPLE}
+                type={btn.type}
+                onClick={handleSubmit}
+              >
+                {btn.name}
+              </Button>
+            ) :
+              <Button
+                key={btn.name}
+                theme={ButtonTheme.PURPLE}
+                type={btn.type}
+                onClick={handleReset}
+              >
+                {btn.name}
+              </Button>
           ))}
         </div>
       </form>
