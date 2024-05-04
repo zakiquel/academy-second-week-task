@@ -25,7 +25,27 @@ export const Form = memo((props: FormProps) => {
   } = props;
 
   const [inputErrors, setInputErrors] = useState<boolean>(false);
+  const [_, setSubmitted] = useState<boolean>(false);
   const [formData, setFormData] = useState<Record<string, string | File[]>>({});
+
+  const handleSubmit = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response) {
+          throw new Error('No response');
+        }
+      } catch (error) {
+        throw new Error('Fetching error');
+      }
+    setSubmitted(true);
+  };
 
   const handleChange = (id: string, value: string | File[]) => {
     setFormData((prevData) => ({
@@ -36,7 +56,10 @@ export const Form = memo((props: FormProps) => {
 
   return (
     jsonData && (
-      <form className={classNames(cls.Form, {}, [className])}>
+      <form
+        className={classNames(cls.Form, {}, [className])}
+        onSubmit={(e) => e.preventDefault()}
+      >
         <h2>{jsonData.form_name}</h2>
         <p className={cls.description}>{jsonData.form_description}</p>
         {jsonData.form_fields.map((field) => {
@@ -135,6 +158,7 @@ export const Form = memo((props: FormProps) => {
               disabled={btn.type === ButtonTypes.SUBMIT && inputErrors}
               theme={ButtonTheme.PURPLE}
               type={btn.type}
+              onClick={handleSubmit}
             >
               {btn.name}
             </Button>
