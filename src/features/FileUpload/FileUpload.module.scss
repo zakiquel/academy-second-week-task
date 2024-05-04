@@ -93,3 +93,22 @@
 .max {
   width: 100%;
 }
+
+@media screen and (max-width: 1200px) {
+  .form {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .form {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 470px) {
+  .form {
+    padding: 5px;
+  }
+}
+

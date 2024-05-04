@@ -56,3 +56,10 @@
 .input:disabled+label::before {
   background-color: #e9ecef;
 }
+
+@media screen and (max-width: 470px) {
+  .Checkbox {
+    padding: 10px;
+    font-size: 16px;
+  }
+}

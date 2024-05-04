@@ -13,3 +13,19 @@
   padding: 80px 40px;
   gap: 100px;
 }
+
+@media screen and (max-width: 770px) {
+  .container {
+    padding: 80px 10px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .MainPage {
+    padding: 10px 10px 10px 10px;
+  }
+
+  .container {
+   gap: 40px;
+  }
+}

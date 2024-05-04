@@ -15,3 +15,10 @@
     outline: 2px solid var(--purple);
   }
 }
+
+@media screen and (max-width: 470px) {
+  .area {
+    padding: 10px;
+    font-size: 15px;
+  }
+}

@@ -85,7 +85,7 @@ export const Form = memo((props: FormProps) => {
         >
           <Icon Svg={Cross} inverted />
         </Button>
-        <h2>{jsonData.form_name}</h2>
+        <h2 className={cls.title}>{jsonData.form_name}</h2>
         <p className={cls.description}>{jsonData.form_description}</p>
         {jsonData.form_fields.map((field) => {
           const input = field as InputField;

@@ -46,3 +46,10 @@
   margin-top: 3px;
 }
 
+@media screen and (max-width: 470px) {
+  .input {
+    padding: 10px;
+    font-size: 15px;
+  }
+}
+
