@@ -43,6 +43,7 @@ export const Input = memo((props: InputProps) => {
     id,
     setInputErrors,
     onInputChange,
+    required,
     ...otherProps
   } = props;
 
@@ -107,6 +108,7 @@ export const Input = memo((props: InputProps) => {
           className={classNames(cls.input, inputMods)}
           readOnly={readonly}
           onBlur={handleBlur}
+          required={required}
           onChange={handleChange}
           {...otherProps}
           placeholder={placeholder}

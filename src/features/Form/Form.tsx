@@ -1,4 +1,4 @@
-import React, { ChangeEvent, memo, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useState } from 'react';
 
 import { FileUpload } from '../FileUpload/FileUpload';
 
@@ -33,30 +33,43 @@ export const Form = memo((props: FormProps) => {
   const [inputErrors, setInputErrors] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formData, setFormData] = useState<Record<string, string | File[]>>({});
+  const [valid, setValid] = useState<boolean>(true);
+
+  const validateFields = useCallback(() => {
+    let isValid = true;
+    jsonData?.form_fields.forEach(field => {
+      if (field.required && !formData[field.id]) {
+        isValid = false;
+      }
+    });
+    return isValid;
+  }, [formData, jsonData?.form_fields]);
 
   useEffect(() => {
     setFormData({});
   }, [jsonData]);
 
-  const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
-    if (!e.target.validationMessage) {
-      try {
-        const response = await fetch('http://localhost:8000/data', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
+  useEffect(() => {
+    setValid(!validateFields());
+  }, [formData, jsonData, validateFields]);
 
-        if (!response) {
-          throw new Error('No response');
-        }
-      } catch (error) {
-        throw new Error('Fetching error');
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response) {
+        throw new Error('No response');
       }
-      setSubmitted(true);
+    } catch (error) {
+      throw new Error('Fetching error');
     }
+    setSubmitted(true);
   };
 
   const handleChange = (id: string, value: string | File[]) => {
@@ -64,6 +77,8 @@ export const Form = memo((props: FormProps) => {
         ...prevData,
         [id]: value,
       }));
+
+    setValid(!validateFields());
   };
 
   const handleReset = () => {
@@ -76,8 +91,6 @@ export const Form = memo((props: FormProps) => {
     setFormData({});
     setData?.(undefined);
   }
-  
-  const disabled = (inputErrors || Object.keys(formData).length === 0)
 
   return (
     jsonData && (
@@ -195,10 +208,10 @@ export const Form = memo((props: FormProps) => {
             btn.type === ButtonTypes.SUBMIT ? (
               <Button
                 key={btn.name}
-                disabled={disabled}
+                disabled={inputErrors || valid}
                 theme={ButtonTheme.PURPLE}
                 type={btn.type}
-                onClick={_ => handleSubmit}
+                onClick={handleSubmit}
               >
                 {btn.name}
               </Button>
